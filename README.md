@@ -54,7 +54,7 @@ vaultlite/
 │   │   ├── auth.ts         ← JWT & Session logic
 │   │   └── utils.ts        ← Styling & formatting helpers
 │   │
-│   └── middleware.ts       ← Auth guards for protected routes
+│   └── proxy.ts       ← Auth guards for protected routes
 ```
 
 ---

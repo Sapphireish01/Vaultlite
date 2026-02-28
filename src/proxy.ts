@@ -1,5 +1,5 @@
-// src/middleware.ts
-// Next.js middleware runs BEFORE every request hits your routes.
+// src/proxy.ts
+// Next.js proxy runs BEFORE every request hits your routes.
 // We use it to redirect unauthenticated users away from protected pages.
 //
 // Think of it as a security guard at the door — faster than checking inside each route.
@@ -13,7 +13,7 @@ const PROTECTED_ROUTES = ["/dashboard"];
 // Routes only for logged-out users (redirect to dashboard if already logged in)
 const AUTH_ROUTES = ["/auth/login", "/auth/register", "/"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("vaultlite_session")?.value;
 
@@ -35,6 +35,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Only run middleware on these paths (not on API routes or static files)
+  // Only run proxy on these paths (not on API routes or static files)
   matcher: ["/", "/dashboard/:path*", "/auth/:path*"],
 };
