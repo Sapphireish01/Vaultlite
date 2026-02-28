@@ -5,7 +5,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
     title: "VaultLite",
-    description: "Your mock digital wallet",
+    description: "Your digital wallet",
 };
 
 export default function RootLayout({

@@ -3,6 +3,9 @@
 // Creates a new user account + wallet.
 // This is a Next.js Route Handler — the function name matches the HTTP method.
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";           // Zod = runtime input validation
 import bcrypt from "bcryptjs";

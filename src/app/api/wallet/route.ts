@@ -2,6 +2,9 @@
 // GET /api/wallet — Returns the current user's wallet info.
 // This is a PROTECTED route — unauthenticated users get 401.
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";

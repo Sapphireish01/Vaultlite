@@ -2,6 +2,9 @@
 // GET  /api/transactions — List transactions (with pagination + filters)
 // POST /api/transactions — Create a new credit or debit
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
