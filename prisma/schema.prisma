@@ -11,6 +11,7 @@ datasource db {
   provider = "postgresql"
   // This reads the DATABASE_URL from your .env file
   url      = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL")
 }
 
 // ─── USER ────────────────────────────────────────────────────────────────────
