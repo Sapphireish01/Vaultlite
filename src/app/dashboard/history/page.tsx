@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
     ArrowLeft,
@@ -27,7 +27,7 @@ interface PaginationData {
     hasMore: boolean;
 }
 
-export default function HistoryPage() {
+function HistoryPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -221,5 +221,17 @@ export default function HistoryPage() {
                 </div>
             </main>
         </div>
+    );
+}
+
+export default function HistoryPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-950">
+                <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
+            </div>
+        }>
+            <HistoryPageContent />
+        </Suspense>
     );
 }
