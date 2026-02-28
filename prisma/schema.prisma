@@ -1,0 +1,82 @@
+// prisma/schema.prisma
+// This file defines your DATABASE STRUCTURE.
+// Every model = a table in your database.
+// Run `npm run db:push` to sync this to your actual DB.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // This reads the DATABASE_URL from your .env file
+  url      = env("DATABASE_URL")
+}
+
+// ─── USER ────────────────────────────────────────────────────────────────────
+// Stores registered users. Passwords are stored as bcrypt hashes (never plaintext).
+model User {
+  id           String        @id @default(cuid())  // Unique ID auto-generated
+  email        String        @unique               // Must be unique across all users
+  name         String
+  passwordHash String                              // bcrypt hash — never the real password
+  createdAt    DateTime      @default(now())
+
+  // Relations — one user has one wallet, many sessions
+  wallet       Wallet?
+  sessions     Session[]
+}
+
+// ─── SESSION ─────────────────────────────────────────────────────────────────
+// Tracks login sessions. Each login creates a session with a token.
+// We check this token on every protected request.
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique              // JWT token stored here for reference
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── WALLET ──────────────────────────────────────────────────────────────────
+// Each user has exactly ONE wallet. Balance is stored in KOBO/CENTS (integer)
+// to avoid floating point rounding errors (a classic fintech bug!).
+// e.g. ₦1,500.00 is stored as 150000
+model Wallet {
+  id             String        @id @default(cuid())
+  userId         String        @unique             // One wallet per user
+  balanceKobo    Int           @default(0)         // Balance in smallest currency unit
+  monthlyLimitKobo Int         @default(50000000) // Default: ₦500,000 monthly limit
+  currency       String        @default("NGN")
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt          // Auto-updated on every change
+
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions   Transaction[]
+}
+
+// ─── TRANSACTION ─────────────────────────────────────────────────────────────
+// Append-only record of every money movement. We NEVER delete transactions —
+// this is how real financial systems work (audit trail).
+model Transaction {
+  id          String          @id @default(cuid())
+  walletId    String
+  type        TransactionType // CREDIT or DEBIT
+  amountKobo  Int             // Always positive — type tells direction
+  description String
+  category    String          @default("General")
+  balanceAfterKobo Int        // Snapshot of balance after this transaction
+  createdAt   DateTime        @default(now())
+
+  wallet      Wallet          @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  @@index([walletId, createdAt]) // Index for fast queries by wallet + date
+}
+
+// ─── ENUMS ───────────────────────────────────────────────────────────────────
+enum TransactionType {
+  CREDIT  // Money coming IN  (+)
+  DEBIT   // Money going OUT  (-)
+}
