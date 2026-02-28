@@ -5,12 +5,12 @@
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { formatNaira, calcMonthlySpent } from "@/lib/currency";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   // ─── AUTHENTICATION CHECK ───────────────────────────────────────────────
   // Every protected route starts with this. If no valid session → 401.
   const session = await getSession();
