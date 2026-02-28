@@ -1,10 +1,12 @@
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 
-export async function GET() {
+// _request param is required — without it Vercel's build tries to
+// statically optimize this route and fails when it finds cookies() usage.
+export async function GET(_request: NextRequest) {
     const session = await getSession();
 
     if (!session) {
