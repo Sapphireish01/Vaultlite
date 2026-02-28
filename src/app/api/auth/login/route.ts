@@ -2,8 +2,10 @@
 // POST /api/auth/login
 // Validates credentials and sets a session cookie.
 
-import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";

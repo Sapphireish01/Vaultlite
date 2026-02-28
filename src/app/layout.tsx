@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { ReactNode } from "react";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "VaultLite",
@@ -18,7 +15,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body suppressHydrationWarning className={`${inter.className} antialiased`}>
+            <body suppressHydrationWarning className="antialiased">
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"
